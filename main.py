@@ -1,11 +1,13 @@
 from fastapi import FastAPI
 import pandas as pd
-
+#Cargamos el dataset movies.csv como un dataframe de Pandas
 movies = pd.read_csv("data/movies.csv", index_col='id')
 
+#Convertimos las siguientes columnas en listas para facilitar la manipulación
 movies[['id_genre', 'id_actor', 'id_directores']] = movies[[
     'id_genre', 'id_actor', 'id_directores']].apply(lambda x: x.apply(eval))
 
+#Carga de datasets como diccionarios para facilitar el acceso
 genres = pd.read_csv("data/genres.csv", index_col='genre').to_dict(
     orient='dict')['id']
 actors = pd.read_csv("data/actors.csv", index_col='actor').to_dict(
@@ -33,6 +35,7 @@ app = FastAPI()
 
 
 # 1
+#Función para obtener la cantidad de filmaciones en un mes solicitado
 @app.get('/cantidad_filmaciones_mes/{mes}')
 def cantidad_filmaciones_mes(mes: str):
     mes = mes.lower().strip()
@@ -44,6 +47,7 @@ def cantidad_filmaciones_mes(mes: str):
 
 
 # 2
+#Función para obtener la cantidad de filmaciones en un día solicitado
 @app.get('/cantidad_filmaciones_dia{dia}')
 def cantidad_filmaciones_dia(dia: str):
     dia = dia.lower().strip()
@@ -53,6 +57,7 @@ def cantidad_filmaciones_dia(dia: str):
 
 
 # 3
+#Función para obtener por su título el año de estreno y el score de una película
 @app.get('/score_titulo/{titulo}')
 def score_titulo(titulo_de_la_filmacion: str):
     titulo_de_la_filmacion = titulo_de_la_filmacion.lower().strip()
@@ -69,6 +74,8 @@ def score_titulo(titulo_de_la_filmacion: str):
 
 
 # 4
+#Función para obtener por su título la cantidad de votos y el valor promedio
+#de las votaciones de una película
 @app.get('/votos_titulo/{titulo}')
 def votos_titulo(titulo_de_la_filmacion: str):
     titulo_de_la_filmacion = titulo_de_la_filmacion.lower().strip()
@@ -88,6 +95,7 @@ def votos_titulo(titulo_de_la_filmacion: str):
 
 
 # 5
+#Función para obtener el éxito de un actor medido a través del promedio de retorno y la cantidad de películas en las que ha participado
 @app.get('/get_actor/{nombre_actor}')
 def get_actor(nombre_actor: str):
     nombre_actor = nombre_actor.lower().strip()
@@ -106,6 +114,7 @@ def get_actor(nombre_actor: str):
 
 
 # 6
+#Función para obtener el nombre de cada película en la que participó el director, la fecha de lanzamiento, el costo y el retorno individual
 @app.get('/get_director/{nombre_director}')
 def get_director(nombre_director: str):
     nombre_director = nombre_director.lower().strip()
